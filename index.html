@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merhaba Dünya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px 40px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #a0a0c0;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card .icon {
+            font-size: 2.4rem;
+            margin-bottom: 16px;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: #a0a0c0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .clock-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .clock {
+            font-size: 4rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .clock-label {
+            color: #a0a0c0;
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: #ffd200;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Merhaba Dünya!</h1>
+        <p>Bu site Netlify ile canliya alindi.</p>
+    </header>
+
+    <div class="cards">
+        <div class="card">
+            <div class="icon">&#9889;</div>
+            <h2>Hizli</h2>
+            <p>Netlify, sitenizi global CDN uzerinden saniyeler icinde kullanicilara ulastirir.</p>
+        </div>
+        <div class="card">
+            <div class="icon">&#128274;</div>
+            <h2>Guvenli</h2>
+            <p>Ucretsiz SSL sertifikasi ile siteniz otomatik olarak HTTPS uzerinden sunulur.</p>
+        </div>
+        <div class="card">
+            <div class="icon">&#127757;</div>
+            <h2>Global</h2>
+            <p>Dunyanin her yerinden dusuk gecikme suresiyle erisim saglanir.</p>
+        </div>
+    </div>
+
+    <div class="clock-section">
+        <div class="clock" id="clock">00:00:00</div>
+        <div class="clock-label">Canli Saat</div>
+    </div>
+
+    <footer>
+        <p>Netlify ile yayinda &mdash; <a href="https://www.netlify.com" target="_blank">netlify.com</a></p>
+    </footer>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = h + ':' + m + ':' + s;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+
+</body>
+</html>
