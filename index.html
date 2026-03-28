@@ -108,6 +108,62 @@
             text-decoration: none;
         }
 
+        .ticker-wrapper {
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.04);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 0;
+        }
+
+        .ticker {
+            display: flex;
+            gap: 48px;
+            width: max-content;
+            animation: scroll 25s linear infinite;
+        }
+
+        .ticker:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+        .ticker-item .pair {
+            color: #ffd200;
+            font-weight: 600;
+        }
+
+        .ticker-item .rate {
+            color: #e0e0e0;
+        }
+
+        .ticker-item .change-up {
+            color: #00e676;
+        }
+
+        .ticker-item .change-down {
+            color: #ff5252;
+        }
+
+        .ticker-label {
+            text-align: center;
+            color: #555;
+            font-size: 0.75rem;
+            margin-top: 6px;
+        }
+
         .about {
             max-width: 600px;
             margin: 0 auto;
@@ -157,6 +213,13 @@
         <div class="clock-label">Canli Saat</div>
     </div>
 
+    <div class="ticker-wrapper">
+        <div class="ticker" id="ticker">
+            <span class="ticker-item">Doviz kurlari yukleniyor...</span>
+        </div>
+    </div>
+    <p class="ticker-label">Canli doviz kurlari (TRY bazli) — veriler her 60 saniyede guncellenir</p>
+
     <div class="about">
         <h2>Hakkimda</h2>
         <p>Merhaba! Ben Mesut. Web gelistirme dunyasini kesfediyorum. Bu site GitHub ve Netlify kullanarak canliya alindi.</p>
@@ -176,6 +239,58 @@
         }
         updateClock();
         setInterval(updateClock, 1000);
+
+        // Doviz kurlari
+        const currencies = ['USD', 'EUR', 'GBP', 'CHF', 'JPY', 'AUD', 'CAD', 'SAR', 'CNY', 'RUB'];
+        const flags = {
+            USD: '$', EUR: '€', GBP: '£', CHF: 'Fr', JPY: '¥',
+            AUD: 'A$', CAD: 'C$', SAR: '﷼', CNY: '¥', RUB: '₽'
+        };
+
+        let prevRates = {};
+
+        async function fetchRates() {
+            try {
+                const res = await fetch('https://open.er-api.com/v6/latest/TRY');
+                const data = await res.json();
+                if (data.result !== 'success') return;
+
+                const rates = data.rates;
+                const ticker = document.getElementById('ticker');
+                let html = '';
+
+                currencies.forEach(c => {
+                    const rate = (1 / rates[c]).toFixed(c === 'JPY' ? 4 : 2);
+                    let arrow = '';
+                    let changeClass = '';
+
+                    if (prevRates[c]) {
+                        if (rate > prevRates[c]) {
+                            arrow = ' ▲';
+                            changeClass = 'change-up';
+                        } else if (rate < prevRates[c]) {
+                            arrow = ' ▼';
+                            changeClass = 'change-down';
+                        }
+                    }
+
+                    prevRates[c] = rate;
+                    html += '<span class="ticker-item">' +
+                        '<span class="pair">' + flags[c] + ' ' + c + '/TRY</span>' +
+                        '<span class="rate">' + rate + '</span>' +
+                        (arrow ? '<span class="' + changeClass + '">' + arrow + '</span>' : '') +
+                        '</span>';
+                });
+
+                // Sonsuz kayan efekt icin icerigi iki kez tekrarla
+                ticker.innerHTML = html + html;
+            } catch (e) {
+                console.error('Doviz kuru alinamadi:', e);
+            }
+        }
+
+        fetchRates();
+        setInterval(fetchRates, 60000);
     </script>
 
 </body>
